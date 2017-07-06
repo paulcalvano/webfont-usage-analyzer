@@ -108,9 +108,9 @@ if (document.styleSheets){
 							fonts[fontCount]['font-family']=document.styleSheets[s].cssRules[r].style.fontFamily;
 							fonts[fontCount]['font-weight']=document.styleSheets[s].cssRules[r].style.fontWeight || "normal";
 							if (fonts[fontCount]['font-weight']==400) fonts[fontCount]['font-weight']="normal";
-							if (fonts[fontCount]['font-weight']==700) fonts[fontCount]['font-weight']="bold";
-							
+							if (fonts[fontCount]['font-weight']==700) fonts[fontCount]['font-weight']="bold";							
 							fonts[fontCount]['font-style']=document.styleSheets[s].cssRules[r].style.fontStyle || "normal" ;
+							fonts[fontCount]['transferSize']=performance.getEntriesByName(furl)[0].transferSize
 							fonts[fontCount]['url']=furl;
 							if (DEBUG) console.log("Found " + furl + "\tfont-family: " + fonts[fontCount]['font-family'] + "\tfont-weight: " + fonts[fontCount]['font-weight'] + "\tfont-style: " + fonts[fontCount]['font-style']);		
 							fontCount++;
@@ -150,7 +150,7 @@ for (var i = 0; i < nodes.length; i++) {			// Loop through all Elements
 				if (DEBUG) console.log(ffamily + "\tMatched\t" + fonts[j]['font-family']  + "\t" + fonts[j]['font-weight'] + "\t" + fonts[j]['font-style']);				
 				if (DEBUG) console.log(ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url']);		
 				if (fweight == fonts[j]['font-weight'] && fstyle == fonts[j]['font-style']  ) {            	
-					style=ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url'];	// Matched a Font File w/ a Computed Style
+					style=ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url'] + "\t" + fonts[j]['transferSize'];	// Matched a Font File w/ a Computed Style
 					urlFound++;        
 				}
 			}
@@ -174,7 +174,7 @@ for (var i = 0; i < nodes.length; i++) {			// Loop through all Elements
 	var urlFound=0;
 	for (j=0;j<fonts.length;j++) {
 		if (ffamily.indexOf(fonts[j]['font-family'])>=0 && fweight == fonts[j]['font-weight'] && fstyle == fonts[j]['font-style']  ) {
-			style=ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url'];
+			style=ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url']+ "\t" + fonts[j]['transferSize'];
 			urlFound++;        
 		}
 	}
@@ -195,7 +195,7 @@ for (var i = 0; i < nodes.length; i++) {			// Loop through all Elements
 	var urlFound=0;
 	for (j=0;j<fonts.length;j++) {
 		if (ffamily.indexOf(fonts[j]['font-family'])>=0 && fweight == fonts[j]['font-weight'] && fstyle == fonts[j]['font-style']  ) {
-			style=ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url'];
+			style=ffamily + "\t" + fweight + "\t" + fstyle + "\t" + fonts[j]['url']+ "\t" + fonts[j]['transferSize'];
 			urlFound++;        
 		}
 	}
