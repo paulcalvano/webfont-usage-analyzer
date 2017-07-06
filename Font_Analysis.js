@@ -77,8 +77,25 @@ function addCSSRule(sheet, selector, rules, index = 0) {
 // add a yellow background to highlighted elements
 addCSSRule(sheet, ".style-highlight", "background-color: yellow");
 
+// First Pass - Look for Stylesheets w/o any cssRules.   Assume a CORS issue and send a crossorigin request so we can parse some rules..
+if (document.styleSheets){
+  for (var s=0;s < document.styleSheets.length; s++) {					// Loop though each StyleSheet
+  	if (DEBUG) console.log("Checking StyleSheet # : " + s + ", " + document.styleSheets[s].href);
+		if (!document.styleSheets[s].cssRules) {					
+		  if (DEBUG) console.log("StyleSheet # : " + s + " No Rules.  Fetching another...  ");
+			  var link = document.createElement("link");
+				link.rel  = 'stylesheet';
+				link.type = 'text/css';
+				link.href = document.styleSheets[s].href;
+				link.crossOrigin = "anonymous";
+				var head  = document.getElementsByTagName('head')[0];
+				head.appendChild(link);				
+		}
+	}
+}
 
-//  First Pass - Parse all Stylesheets and attempt to find Font Files.   Associate Font Files with Font-Family, Font-Weight, and Font-Style.
+
+//  Second Pass - Parse all Stylesheets and attempt to find Font Files.   Associate Font Files with Font-Family, Font-Weight, and Font-Style.
 var fontCount=0;	// Number of fonts we've found.
 var fonts=[];	// Array for storing Font information.
 
@@ -126,7 +143,7 @@ if (DEBUG) console.log("Done Parsing CSS");
 if (DEBUG) console.log(fonts);													  	       
 if (DEBUG) console.log("Second Pass: Parse All DOM Elements");													  	       
     
-// Second Pass - Parse all DOM elements and find computed sytles.  Correllate fonts[] array to computed styles
+// Third Pass - Parse all DOM elements and find computed sytles.  Correllate fonts[] array to computed styles
 // Adapted from https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/
 var style,ffamily,fweight,fsize,fstyle;
 var styleId;
