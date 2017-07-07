@@ -78,7 +78,6 @@ function addCSSRule(sheet, selector, rules, index = 0) {
 addCSSRule(sheet, ".style-highlight", "background-color: yellow");
 
 // First Pass - Look for Stylesheets w/o any cssRules.   Assume a CORS issue and send a crossorigin request so we can parse some rules..
-var fetchedCSS=0;
 if (document.styleSheets){
   for (var s=0;s < document.styleSheets.length; s++) {					// Loop though each StyleSheet
   	if (DEBUG) console.log("Checking StyleSheet # : " + s + ", " + document.styleSheets[s].href);
@@ -90,12 +89,10 @@ if (document.styleSheets){
 				link.href = document.styleSheets[s].href;
 				link.crossOrigin = "anonymous";
 				var head  = document.getElementsByTagName('head')[0];
-				head.appendChild(link);			
-				fetchedCSS++;	
+				head.appendChild(link);				
 		}
 	}
 }
-
 
 
 //  Second Pass - Parse all Stylesheets and attempt to find Font Files.   Associate Font Files with Font-Family, Font-Weight, and Font-Style.
@@ -249,9 +246,6 @@ var tbl = [];
 for(i=0;i<allStyles.length;i++) 
 	tbl[i] = new Row(allStyles[i].split('\t'));
 console.table(tbl)
-
-if (fetchedCSS>=1) 
-	console.log("There were " + fetchedCSS + " stylesheets requested to attempt to find more fonts.  You may need to rerun this script if you do not see all the fonts you are expecting");	
 console.log("To Highlight a Font, enter the command: highlightInPage(n);\n where 'n' is the ID of the font package from the fontStacksInUse array");
 
 
