@@ -1,17 +1,21 @@
 // Font Usage Analyzer
-// Author: Paul Calvano, Akamai Technologies
 // Parses CSS, Resource Timing and DOM to associate WebFont URLs with FontStacks. 
 // Allows for highlighting of font stacks correlating to WebFont URLs to examine where they are used on the page
-// Based on work from https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/ 
+// @author Paul Calvano
+// @license MIT
+// @copyright 2017 Akamai Technologies, Inc.
 
-// Note: This is a work in progress - still working on font identification... 
-
+// Portions of the code are based on work from https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/ 
+// @license MIT
+// @copyright AndrewRMinion Design
 
 var startTime = new Date().getTime();
 var DEBUG=false;
 
 // Function to resolve relative URLs by creating a HTML element and using the browser to resolve it for us... 
-// https://stackoverflow.com/questions/470832/getting-an-absolute-url-from-a-relative-one-ie6-issue
+// @from http://ecmanaut.blogspot.com/2012/10/absolute-url-from-relative-url-and.html
+// @license MIT
+// @copyright Johan Sundström
 function resolve(url, base_url) {		
   var doc      = document
     , old_base = doc.getElementsByTagName('base')[0]
@@ -31,7 +35,6 @@ function resolve(url, base_url) {
 }
 
 // Highlight elements with the specified style
-// From https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/ 
 function highlightInPage(styleId) {
     var thisNode,
         allNodes = document.body.getElementsByTagName('*'),
@@ -47,15 +50,12 @@ function highlightInPage(styleId) {
     }
 }
 
-
 // Clear all highlights
-// From https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/ 
 function clearHighlights() {
     highlightInPage();
 }
 
 // Add blank stylesheet for highlight rule
-// From https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/ 
 var sheet = (function() {
     var style = document.createElement("style");		    // Create the <style> tag
     style.appendChild(document.createTextNode(""));			// WebKit hack :(
@@ -65,7 +65,6 @@ var sheet = (function() {
 
 
 // Add specified CSS rule to the specified stylesheet
-// From https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/ 
 function addCSSRule(sheet, selector, rules, index = 0) {
     if ("insertRule" in sheet) {
         sheet.insertRule(selector + "{" + rules + "}", index);
@@ -76,6 +75,7 @@ function addCSSRule(sheet, selector, rules, index = 0) {
 
 // add a yellow background to highlighted elements
 addCSSRule(sheet, ".style-highlight", "background-color: yellow");
+
 
 // First Pass - Look for Stylesheets w/o any cssRules.   Assume a CORS issue and send a crossorigin request so we can parse some rules..
 var fetchedCSS=0;
@@ -96,12 +96,9 @@ if (document.styleSheets){
 	}
 }
 
-
-
 //  Second Pass - Parse all Stylesheets and attempt to find Font Files.   Associate Font Files with Font-Family, Font-Weight, and Font-Style.
 var fontCount=0;	// Number of fonts we've found.
 var fonts=[];	// Array for storing Font information.
-
 
 if (document.styleSheets){
   for (var s=0;s < document.styleSheets.length; s++) {					// Loop though each StyleSheet
@@ -119,7 +116,7 @@ if (document.styleSheets){
 		      for (var f=0;f<urls.length;f++) {
 		      	// Remove the url(" and ") part of the CSS rule.   
 		        var furl = urls[f].replace("url(\"","").replace("\")","");
-		;				furl = resolve(furl, document.styleSheets[s].href);		// Create a HTML element to resolve the fully qualified URL based.   
+		 				furl = resolve(furl, document.styleSheets[s].href);		// Create a HTML element to resolve the fully qualified URL based.   
 		        
 		        // Match the fully qualified URLs against Resource Timing data to confirm it was loaded by the browser
 						if (performance.getEntriesByName(furl).length>0) {												
@@ -147,7 +144,6 @@ if (DEBUG) console.log(fonts);
 if (DEBUG) console.log("Second Pass: Parse All DOM Elements");													  	       
     
 // Third Pass - Parse all DOM elements and find computed sytles.  Correllate fonts[] array to computed styles
-// Adapted from https://gist.github.com/macbookandrew/f33dbbc0aa582d0515919dc5fb95c00a/
 var style,ffamily,fweight,fsize,fstyle;
 var styleId;
 var allStyles = [];
