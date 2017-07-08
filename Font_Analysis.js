@@ -11,7 +11,7 @@
 
 var startTime = new Date().getTime();
 var DEBUG=false;
-
+  
 // Function to resolve relative URLs by creating a HTML element and using the browser to resolve it for us... 
 // @from http://ecmanaut.blogspot.com/2012/10/absolute-url-from-relative-url-and.html
 // @license MIT
