@@ -138,13 +138,32 @@
                   fonts[fontCount] = {};
                   fonts[fontCount]['font-family'] = document.styleSheets[s].cssRules[r].style.fontFamily;
                   fonts[fontCount]['font-weight'] = document.styleSheets[s].cssRules[r].style.fontWeight || "normal";
-                  if (fonts[fontCount]['font-weight'] == 400) fonts[fontCount]['font-weight'] = "normal";
-                  if (fonts[fontCount]['font-weight'] == 700) fonts[fontCount]['font-weight'] = "bold";
                   fonts[fontCount]['font-style'] = document.styleSheets[s].cssRules[r].style.fontStyle || "normal";
                   fonts[fontCount]['transferSize'] = performance.getEntriesByName(furl)[0].transferSize
                   fonts[fontCount]['url'] = furl;
                   if (DEBUG) console.log("Found " + furl + "\tfont-family: " + fonts[fontCount]['font-family'] + "\tfont-weight: " + fonts[fontCount]['font-weight'] + "\tfont-style: " + fonts[fontCount]['font-style']);
                   fontCount++;
+                  
+                  // In case font is named with a weight number (400/700) and referenced in the DOM with a name (normal/bold)
+                  if (document.styleSheets[s].cssRules[r].style.fontWeight == 400) {
+                  	fonts[fontCount] = {};
+                  	fonts[fontCount]['font-weight'] = "normal";
+                    fonts[fontCount]['font-family'] = document.styleSheets[s].cssRules[r].style.fontFamily;               		  
+                		fonts[fontCount]['font-style'] = document.styleSheets[s].cssRules[r].style.fontStyle || "normal";
+                 		fonts[fontCount]['transferSize'] = performance.getEntriesByName(furl)[0].transferSize
+                 		fonts[fontCount]['url'] = furl;
+                 		fontCount++;
+                  }
+                  if (document.styleSheets[s].cssRules[r].style.fontWeight == 700) {
+                  	fonts[fontCount] = {};
+                  	fonts[fontCount]['font-weight'] = "bold";
+                    fonts[fontCount]['font-family'] = document.styleSheets[s].cssRules[r].style.fontFamily;               		  
+                		fonts[fontCount]['font-style'] = document.styleSheets[s].cssRules[r].style.fontStyle || "normal";
+                 		fonts[fontCount]['transferSize'] = performance.getEntriesByName(furl)[0].transferSize
+                 		fonts[fontCount]['url'] = furl;
+                 		fontCount++;
+                  }                  
+                  
                 }
               }
             }
